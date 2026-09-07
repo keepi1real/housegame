@@ -28,17 +28,18 @@ export class TrainingDummy
     this.homeX = x
     this.homeY = y
     this.setDepth(80)
-    this.healthBar = new HealthBar(scene, 46, 5)
+    this.healthBar = new HealthBar(scene, 84, 7)
 
+    const radius = GameConfig.enemy.dummyHitRadius
     const body = this.body as Phaser.Physics.Arcade.Body
-    body.setCircle(21, this.width / 2 - 21, this.height / 2 - 21)
+    body.setCircle(radius, this.width / 2 - radius, this.height / 2 - radius)
     body.setDrag(GameConfig.enemy.dummyDrag)
     body.setCollideWorldBounds(true)
     body.setBounce(0.35)
   }
 
   get hitRadius(): number {
-    return 21
+    return GameConfig.enemy.dummyHitRadius
   }
 
   get isAlive(): boolean {
@@ -58,7 +59,7 @@ export class TrainingDummy
 
   refresh(): void {
     const ratio = this.health / GameConfig.enemy.dummyMaxHealth
-    this.healthBar.draw(this.x, this.y - this.height / 2 - 12, ratio)
+    this.healthBar.draw(this.x, this.y - this.height / 2 - 16, ratio)
   }
 
   private fall(): void {

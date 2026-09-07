@@ -54,9 +54,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.animator = new CharacterAnimator(this, prefix)
     this.animator.play(CharacterAnimation.Idle)
 
+    // Anchored where the character meets the floor, so position, collision and
+    // the point attacks originate from are all the same place on the ground.
+    this.setOrigin(0.5, WARDEN_SHEET.groundOriginY)
+
     const radius = GameConfig.player.radius
     const body = this.body as Phaser.Physics.Arcade.Body
-    body.setCircle(radius, this.width / 2 - radius, this.height / 2 - radius)
+    body.setCircle(
+      radius,
+      this.width / 2 - radius,
+      this.height * WARDEN_SHEET.groundOriginY - radius,
+    )
     body.setCollideWorldBounds(true)
   }
 
@@ -218,7 +226,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
       this.slash.play(
         this.x,
-        this.y,
+        this.y + GameConfig.attack.arcHeightOffset,
         this.facing,
         cfg.range,
         cfg.arcDegrees,
@@ -283,7 +291,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
       this.slash.play(
         this.x,
-        this.y,
+        this.y + GameConfig.attack.arcHeightOffset,
         this.facing,
         cfg.range,
         cfg.arcDegrees,

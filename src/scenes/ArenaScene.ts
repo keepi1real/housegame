@@ -99,7 +99,7 @@ export class ArenaScene extends Phaser.Scene {
 
     this.damageNumbers.spawn(
       payload.target.x,
-      payload.target.y - 34,
+      payload.target.y - 62,
       payload.damage,
       payload.emphatic,
     )

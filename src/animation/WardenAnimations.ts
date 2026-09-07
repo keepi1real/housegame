@@ -7,15 +7,17 @@ import type {
 /**
  * Sheet layout for the Warden, the first playable character.
  *
- * These numbers mirror the render specification in ART_PIPELINE.md. Swapping the
- * procedural placeholder for real Blender renders means changing `textureKey`
- * and the frame sizes here, and nothing else in the project.
+ * Produced by tools/blender/render_warden.py and packed by tools/pack_sheet.py.
+ * Re-rendering the character with a different model means re-running those two
+ * and pasting the table the packer prints, and nothing else in the project.
  */
 export const WARDEN_SHEET: CharacterSheetLayout = {
   textureKey: 'warden',
-  frameWidth: 64,
-  frameHeight: 64,
+  texturePath: 'assets/warden.png',
+  frameWidth: 192,
+  frameHeight: 192,
   columns: 8,
+  groundOriginY: 149 / 192,
 }
 
 /**

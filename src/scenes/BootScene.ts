@@ -1,6 +1,5 @@
 import Phaser from 'phaser'
-import { PlaceholderWardenSheet } from '../art/PlaceholderWardenSheet'
-import { WARDEN_ANIMATIONS, WARDEN_SHEET } from '../animation/WardenAnimations'
+import { WARDEN_SHEET } from '../animation/WardenAnimations'
 
 /**
  * Generates placeholder textures procedurally, then hands off to the arena.
@@ -14,8 +13,14 @@ export class BootScene extends Phaser.Scene {
     super('Boot')
   }
 
+  preload(): void {
+    this.load.spritesheet(WARDEN_SHEET.textureKey, WARDEN_SHEET.texturePath, {
+      frameWidth: WARDEN_SHEET.frameWidth,
+      frameHeight: WARDEN_SHEET.frameHeight,
+    })
+  }
+
   create(): void {
-    this.createWardenSheet()
     this.createDummyTexture()
     this.createSlashTexture()
     this.createSparkTexture()
@@ -24,28 +29,20 @@ export class BootScene extends Phaser.Scene {
     this.scene.start('Arena')
   }
 
-  /**
-   * The Warden's animation sheet. Procedural for now; ART_PIPELINE.md describes
-   * the Blender renders that will replace it without any code change here.
-   */
-  private createWardenSheet(): void {
-    PlaceholderWardenSheet.generate(this, WARDEN_SHEET, WARDEN_ANIMATIONS)
-  }
-
   private createDummyTexture(): void {
     const g = this.add.graphics()
 
     g.fillStyle(0x7a6b8c, 1)
-    g.fillRoundedRect(2, 6, 40, 44, 9)
+    g.fillRoundedRect(4, 12, 82, 92, 18)
 
     g.fillStyle(0x2a2334, 1)
-    g.fillRect(11, 20, 7, 9)
-    g.fillRect(26, 20, 7, 9)
+    g.fillRect(23, 42, 14, 18)
+    g.fillRect(54, 42, 14, 18)
 
     g.fillStyle(0x574b68, 1)
-    g.fillRect(2, 35, 40, 4)
+    g.fillRect(4, 74, 82, 8)
 
-    g.generateTexture('dummy', 44, 52)
+    g.generateTexture('dummy', 90, 108)
     g.destroy()
   }
 

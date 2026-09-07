@@ -20,8 +20,17 @@ export interface AnimationDefinition {
 /** Sheet geometry shared by every animation on one character. */
 export interface CharacterSheetLayout {
   readonly textureKey: string
+  /** Path served by Vite, relative so the build works on any static host. */
+  readonly texturePath: string
   readonly frameWidth: number
   readonly frameHeight: number
   /** Frames per row. Rows are padded to this width even when unused. */
   readonly columns: number
+  /**
+   * Vertical origin, as a fraction of frame height, placed at the character's
+   * feet. A top-down character must be anchored where it touches the floor,
+   * not at the middle of its image, or its shadow and collision drift upward
+   * as the sprite gets taller. Measured from the packed sheet.
+   */
+  readonly groundOriginY: number
 }
