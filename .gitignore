@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+.idea/
+*.iml
+local.properties
+build/
+.gradle/
+node_modules/
+.godot/
+.import/
+export_presets.cfg
