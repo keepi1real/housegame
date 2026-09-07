@@ -6,8 +6,11 @@
  */
 export const GameConfig = {
   view: {
-    width: 960,
-    height: 540,
+    // Sized so the Warden, rendered at ~130px tall per ART_PIPELINE.md, occupies
+    // roughly 18% of screen height. That is the proportion Hades uses, and it is
+    // what keeps a detailed character readable without crowding the arena.
+    width: 1280,
+    height: 720,
     backgroundColor: '#0a090c',
   },
 

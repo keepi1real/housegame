@@ -1,4 +1,6 @@
 import Phaser from 'phaser'
+import { PlaceholderWardenSheet } from '../art/PlaceholderWardenSheet'
+import { WARDEN_ANIMATIONS, WARDEN_SHEET } from '../animation/WardenAnimations'
 
 /**
  * Generates placeholder textures procedurally, then hands off to the arena.
@@ -13,7 +15,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.createWardenTexture()
+    this.createWardenSheet()
     this.createDummyTexture()
     this.createSlashTexture()
     this.createSparkTexture()
@@ -22,19 +24,12 @@ export class BootScene extends Phaser.Scene {
     this.scene.start('Arena')
   }
 
-  /** A hooded figure with a dark void where the face should be. */
-  private createWardenTexture(): void {
-    const g = this.add.graphics()
-
-    g.fillStyle(0xede4d4, 1)
-    g.fillRoundedRect(5, 11, 18, 24, 7)
-    g.fillTriangle(14, 0, 3, 15, 25, 15)
-
-    g.fillStyle(0x16121c, 1)
-    g.fillCircle(14, 12, 3.6)
-
-    g.generateTexture('player', 28, 36)
-    g.destroy()
+  /**
+   * The Warden's animation sheet. Procedural for now; ART_PIPELINE.md describes
+   * the Blender renders that will replace it without any code change here.
+   */
+  private createWardenSheet(): void {
+    PlaceholderWardenSheet.generate(this, WARDEN_SHEET, WARDEN_ANIMATIONS)
   }
 
   private createDummyTexture(): void {

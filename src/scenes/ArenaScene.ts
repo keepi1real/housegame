@@ -9,8 +9,8 @@ import { Player } from '../entities/Player'
 import { PlayerEvents, type PlayerHitPayload } from '../entities/PlayerEvents'
 import { TrainingDummy } from '../entities/TrainingDummy'
 
-const ARENA_WIDTH = 1280
-const ARENA_HEIGHT = 800
+const ARENA_WIDTH = 1600
+const ARENA_HEIGHT = 1000
 
 /**
  * Phase 0 test room.

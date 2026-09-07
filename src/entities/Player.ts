@@ -6,6 +6,11 @@ import type { Damageable } from '../combat/Damageable'
 import type { InputIntent } from '../input/InputIntent'
 import { PlayerState } from './PlayerState'
 import { PlayerEvents, type PlayerHitPayload } from './PlayerEvents'
+import { AnimationRegistrar } from '../animation/AnimationRegistrar'
+import { CharacterAnimator } from '../animation/CharacterAnimator'
+import { CharacterAnimation } from '../animation/CharacterAnimation'
+import type { CharacterAnimationKey } from '../animation/CharacterAnimation'
+import { WARDEN_ANIMATIONS, WARDEN_SHEET } from '../animation/WardenAnimations'
 
 /**
  * The Warden: the player character.
@@ -29,15 +34,25 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   private readonly facing = new Phaser.Math.Vector2(1, 0)
   private readonly slash: SlashEffect
+  private readonly animator: CharacterAnimator
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, 'player')
+    super(scene, x, y, WARDEN_SHEET.textureKey)
 
     scene.add.existing(this)
     scene.physics.add.existing(this)
 
     this.setDepth(100)
     this.slash = new SlashEffect(scene)
+
+    const prefix = AnimationRegistrar.register(
+      scene,
+      'warden',
+      WARDEN_SHEET,
+      WARDEN_ANIMATIONS,
+    )
+    this.animator = new CharacterAnimator(this, prefix)
+    this.animator.play(CharacterAnimation.Idle)
 
     const radius = GameConfig.player.radius
     const body = this.body as Phaser.Physics.Arcade.Body
@@ -81,6 +96,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     switch (this.action) {
       case PlayerState.Free:
         this.updateFree(deltaMs, intent)
+        // updateFree may have started a swing or a charge. Only drive the
+        // locomotion loop when it did not, otherwise idle would immediately
+        // overwrite the swing animation that was just started.
+        if (this.action === PlayerState.Free) {
+          this.animator.play(
+            intent.move.lengthSq() > 0.01
+              ? CharacterAnimation.Run
+              : CharacterAnimation.Idle,
+          )
+        }
         break
       case PlayerState.Dashing:
         this.updateDash()
@@ -155,6 +180,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.invulnerableMs = GameConfig.dash.invulnerableMs
     this.enterState(PlayerState.Dashing)
 
+    this.animator.restart(CharacterAnimation.Dash)
     this.applyDashStretch(direction)
     this.setAlpha(0.65)
 
@@ -175,6 +201,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const lunge = GameConfig.attack.lungeSpeed[this.comboIndex] ?? 0
     this.setVelocity(this.facing.x * lunge, this.facing.y * lunge)
 
+    this.animator.restart(this.lightAnimationForCombo())
     this.punchScale(this.isFinisher() ? 1.18 : 1.09)
   }
 
@@ -218,6 +245,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private updateHeavyCharge(deltaMs: number, intent: InputIntent): void {
     // Charging keeps the player mobile but slow, so committing is still a risk.
     this.applyMovement(deltaMs, intent.move, 0.42)
+    this.animator.play(CharacterAnimation.Idle)
 
     const charged = this.stateElapsedMs >= GameConfig.heavy.chargeMs
 
@@ -240,6 +268,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.swingHasLanded = false
     this.enterState(PlayerState.HeavySwing)
     this.setVelocity(this.facing.x * 380, this.facing.y * 380)
+    this.animator.restart(CharacterAnimation.Heavy)
     this.punchScale(1.3)
   }
 
@@ -312,6 +341,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private advanceCombo(): void {
     this.comboIndex = (this.comboIndex + 1) % GameConfig.attack.damage.length
     this.comboIdleMs = GameConfig.attack.comboWindowMs
+  }
+
+  /** Each combo step gets its own swing arc so the three reads as escalating. */
+  private lightAnimationForCombo(): CharacterAnimationKey {
+    switch (this.comboIndex) {
+      case 0:
+        return CharacterAnimation.Light1
+      case 1:
+        return CharacterAnimation.Light2
+      default:
+        return CharacterAnimation.Light3
+    }
   }
 
   private isFinisher(): boolean {
