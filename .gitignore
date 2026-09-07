@@ -9,3 +9,5 @@ node_modules/
 .godot/
 .import/
 export_presets.cfg
+dist/
+.vite/

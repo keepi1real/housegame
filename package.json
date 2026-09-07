@@ -1,0 +1,20 @@
+{
+  "name": "housegame",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Dom - top-down action roguelike",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
+  }
+}
