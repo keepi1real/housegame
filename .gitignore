@@ -11,3 +11,4 @@ node_modules/
 export_presets.cfg
 dist/
 .vite/
+.render/

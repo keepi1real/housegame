@@ -7,8 +7,17 @@
 - [BRIEF.md](BRIEF.md) — вопросы, с которых всё началось
 - [CONCEPTS.md](CONCEPTS.md) — три рассмотренных концепта и обоснование выбора
 - [GDD.md](GDD.md) — дизайн-документ: мир, механики, дорожная карта
+- [lore/](lore/) — три проработанных варианта мира, персонажей и сюжета
 
 ## Запуск
+
+Все команды выполняются из папки проекта. Если открыл новый терминал, сначала:
+
+```bash
+cd /Users/uzicus/Desktop/housegame
+```
+
+Затем:
 
 ```bash
 npm install
@@ -53,11 +62,22 @@ npm run typecheck  # только проверка типов
 ## Персонаж
 
 Смотритель это трёхмерная модель, отрендеренная в двумерные спрайты. Сейчас это
-серая версия из примитивов, собранная скриптом. Пересобрать:
+серая версия из примитивов, собранная скриптом.
+
+Пересобрать персонажа целиком, рендер плюс упаковка:
 
 ```bash
-blender --background --python tools/blender/render_warden.py -- --out /tmp/warden_frames
-python3 tools/pack_sheet.py /tmp/warden_frames public/assets/warden.png
+npm run warden
+```
+
+Занимает около минуты. Кадры складываются в `.render/warden`, готовый лист
+попадает в `public/assets/warden.png`.
+
+Отдельными шагами, если нужно:
+
+```bash
+npm run render:warden
+npm run pack:warden
 ```
 
 Подробности и план замены на настоящую модель в [ART_PIPELINE.md](ART_PIPELINE.md).

@@ -406,6 +406,12 @@ brew install --cask blender
 Когда рендер готов, кадры собираются в лист одной командой.
 
 ```bash
+npm run pack:warden
+```
+
+Или напрямую, если кадры лежат в другом месте:
+
+```bash
 python3 tools/pack_sheet.py <папка_с_кадрами> public/assets/warden.png --fps 15
 ```
 
@@ -441,18 +447,33 @@ python3 tools/pack_sheet.py <папка_с_кадрами> public/assets/warden.
 
 ### Команды
 
+Все команды выполняются **из папки проекта**. Пути в них относительные, поэтому
+из домашней папки они не найдут скрипты.
+
 ```bash
-blender --background --python tools/blender/render_warden.py -- --out /tmp/warden_frames
-python3 tools/pack_sheet.py /tmp/warden_frames public/assets/warden.png
+cd /Users/uzicus/Desktop/housegame
 ```
 
-Первая занимает около минуты и выдаёт 62 кадра. Вторая собирает лист
-1536 на 1920 и печатает готовый TypeScript.
-
-Одна анимация отдельно, для быстрой проверки:
+Рендер и упаковка одной командой, около минуты:
 
 ```bash
-blender --background --python tools/blender/render_warden.py -- --out /tmp/f --only idle
+npm run warden
+```
+
+Отдельными шагами, если нужно:
+
+```bash
+npm run render:warden
+npm run pack:warden
+```
+
+Кадры складываются в `.render/warden`, лист 1536 на 1920 попадает в
+`public/assets/warden.png`, а упаковщик печатает готовый TypeScript.
+
+Одна анимация, для быстрой проверки позы:
+
+```bash
+blender --background --python tools/blender/render_warden.py -- --out .render/probe --only idle
 ```
 
 ### Три вещи, которые скрипт делает сам
